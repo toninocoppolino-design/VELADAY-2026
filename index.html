@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Tesseramento Promozionale FIV - Vela Day N.C.T.V. Milazzo</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.4; color: #333; margin: 30px; font-size: 13px; }
+        
+        /* Bottoni di controllo */
+        .btn-container { display: flex; gap: 15px; margin-bottom: 20px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; text-decoration: none; text-align: center; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-print { background-color: #0056b3; color: white; }
+        .btn-send { background-color: #28a745; color: white; }
+        .btn:disabled { background-color: #cccccc; cursor: not-allowed; }
+        
+        /* Layout Intestazione con Loghi */
+        .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px; }
+        .header-logo-left { width: 90px; height: auto; }
+        .header-logo-right { width: 100px; height: auto; }
+        .header-text { text-align: center; flex-grow: 1; padding: 0 15px; }
+        .header-text h2 { margin: 3px 0; font-size: 11px; font-weight: normal; color: #555; text-transform: uppercase; }
+        .header-text h1 { margin: 5px 0; font-size: 18px; color: #0056b3; text-transform: uppercase; }
+        .header-text .club-title { margin: 5px 0 0 0; font-size: 15px; font-weight: bold; color: #d9534f; }
+        
+        .title { text-align: center; font-size: 16px; font-weight: bold; margin: 20px 0; text-transform: uppercase; background-color: #f2f2f2; padding: 8px; }
+        .section-title { font-size: 14px; font-weight: bold; color: #0056b3; margin-top: 15px; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 3px; }
+        
+        /* Griglia Form */
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .form-group { display: flex; align-items: center; margin-bottom: 8px; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { font-weight: bold; min-width: 130px; margin-right: 5px; }
+        .form-group input[type="text"], .form-group input[type="email"] { flex-grow: 1; border: none; border-bottom: 1px dotted #333; padding: 3px; font-size: 13px; background: transparent; font-family: Arial, sans-serif; }
+        
+        /* Privacy e Consensi */
+        .privacy-box { font-size: 11px; text-align: justify; border: 1px solid #ccc; padding: 10px; background-color: #fafafa; margin-top: 15px; max-height: 100px; overflow-y: auto; }
+        .consent-section { margin-top: 15px; border: 1px dashed #bbb; padding: 10px; }
+        .consent-options { margin: 10px 0; }
+        .consent-options label { margin-right: 20px; font-weight: bold; }
+        .signature-line { display: flex; justify-content: space-between; margin-top: 10px; align-items: flex-end; }
+        .signature-box { border-top: 1px solid #333; width: 45%; text-align: center; font-size: 11px; padding-top: 5px; margin-top: 20px; }
+        
+        /* Piè di pagina con Loghi Partner */
+        .footer { margin-top: 35px; border-top: 1px solid #eee; padding-top: 15px; text-align: center; }
+        .footer-logos { display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 10px; }
+        .footer-logos img { height: 45px; width: auto; object-fit: contain; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { margin: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container no-print">
+        <button onclick="window.print()" class="btn btn-print">🖨️ Stampa / Salva in PDF</button>
+        <button id="btnInvia" onclick="inviaTramiteServer()" class="btn btn-send">✉️ Invia Domanda tramite Email</button>
+    </div>
+
+    <form id="moduloTesseramento" onsubmit="event.preventDefault(); inviaTramiteServer();">
+        
+        <div class="header-container">
+            <img class="header-logo-left" src="logo trasparente copia.gif" alt="Logo Nuovo Circolo del Tennis e della Vela Milazzo">
+            
+            <div class="header-text">
+                <h2>Federazione Italiana Sportiva Nazionale Riconosciuta dal CONI</h2>
+                <h2>Federazione Sportiva Nazionale Paralimpica Riconosciuta dal CIP</h2>
+                <h1>FIV - Federazione Italiana Vela</h1>
+                <div class="club-title">Nuovo Circolo del Tennis e della Vela - Milazzo</div>
+            </div>
+            
+            <img class="header-logo-right" src="fiv-logo.png" alt="Logo FIV">
+        </div>
+
+        <div class="title">Tesseramento Promozionale - VELA DAY 2026</div>
+  <h1>Nel caso di minore, compilare con i dati dello stesso</h1>
+        <p>Il sottoscritto (compilare in stampatello ben leggibile) chiede di essere tesserato per codesta Federazione e assume l'obbligo di osservare le norme dello statuto e dei regolamenti della F.I.V.</p>
+
+        <div class="section-title">Dati Anagrafici (I campi con * sono obbligatori)</div>
+        <div class="form-grid">
+            <div class="form-group"><label>Cognome *:</label><input type="text" id="cognome" name="Cognome" required></div>
+            <div class="form-group"><label>Nome *:</label><input type="text" id="nome" name="Nome" required></div>
+            <div class="form-group"><label>Sesso (M/F) *:</label><input type="text" id="sesso" name="Sesso" style="width: 40px; flex-grow: 0;" required></div>
+            <div class="form-group"><label>Data di Nascita *:</label><input type="text" id="data_nascita" name="Data_di_Nascita" placeholder="gg/mm/aaaa" required></div>
+            <div class="form-grid full-width" style="grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0;">
+                <div class="form-group" style="margin: 0;"><label>Codice Fiscale *:</label><input type="text" id="cf" name="Codice_Fiscale" required></div>
+                <div class="form-group" style="margin: 0;"><label>Comune di Nascita *:</label><input type="text" id="comune_nascita" name="Comune_di_Nascita" required></div>
+            </div>
+        </div>
+
+        <div class="section-title">Residenza e Contatti</div>
+        <div class="form-grid">
+            <div class="form-group full-width"><label>Residente in:</label><input type="text" id="residenza" name="Residente_in"></div>
+            <div class="form-group" style="grid-column: span 2; display: flex;"><label>Indirizzo:</label><input type="text" id="indirizzo" name="Indirizzo" style="flex-grow: 3; margin-right: 10px;"><label style="min-width: auto; margin-right: 5px;">Civico:</label><input type="text" id="civico" name="Civico" style="width: 50px; flex-grow: 0;"></div>
+            <div class="form-group"><label>CAP:</label><input type="text" id="cap" name="CAP"></div>
+            <div class="form-group"><label>Tel. Fisso:</label><input type="text" id="tel" name="Tel_Fisso"></div>
+            <div class="form-group"><label>Mobile / Cellulare:</label><input type="text" id="mobile" name="Cellulare"></div>
+            <div class="form-group"><label>E-mail *:</label><input type="email" id="email" name="Email" required></div>
+        </div>
+
+        <div class="section-title">Informativa ai sensi dell'Art. 13 D. Lgs. 196/2003 (Privacy)</div>
+        <div class="privacy-box">
+            Ai sensi dell'art. 13 D. Lgs. 196/2003, ed in relazione ai dati personali che la Società sportiva acquisisce anche in nome e per conto della Federazione Italiana Vela, La informiamo che il trattamento è finalizzato unicamente alla realizzazione delle finalità istituzionali promosse dalla Federazione Italiana Vela nei limiti delle disposizioni statutarie previste. Il trattamento è realizzato per mezzo di operazioni di raccolta, registrazione, organizzazione, conservazione, consultazione, elaborazione, modifica, selezione, estrazione, raffronto, utilizzo, interconnessione, blocco, comunicazione, cancellazione e distribuzione dei dati, con o senza l'ausilio di strumenti elettronici. Il conferimento dei dati personali comuni e sensibili è strettamente necessario ai fini dello svolgimento delle attività e del tesseramento. Titolare del trattamento è la Federazione Italiana Vela, Piazza Borgo Pila, 40 - 16129 Genova.
+        </div>
+
+        <div class="consent-section">
+            <p><strong>1. Diffusione dei dati per fini istituzionali:</strong> Presto il consenso per l'eventuale diffusione dei dati personali anagrafici conferiti, per fini istituzionali, tramite il sito della Federazione Italiana Vela.</p>
+            <div class="consent-options">
+                <label><input type="radio" name="consenso_fiv" id="consenso_fiv_si" value="SI"> SÌ</label>
+                <label><input type="radio" name="consenso_fiv" id="consenso_fiv_no" value="NO"> NO</label>
+            </div>
+            <div class="signature-line">
+                <div class="signature-box">Firma del richiedente</div>
+                <div class="signature-box">Firma dell'esercente la potestà legale (per minorenni)</div>
+            </div>
+        </div>
+
+        <div class="consent-section">
+            <p><strong>2. Trattamento dati per marketing di terzi:</strong> Presto il consenso per l'eventuale trattamento dei dati personali anagrafici conferiti per finalità di marketing e promozionali di terzi, ai sensi del D. Lgs. 196/2003.</p>
+            <div class="consent-options">
+                <label><input type="radio" name="consenso_mktg" id="consenso_mktg_si" value="SI"> SÌ</label>
+                <label><input type="radio" name="consenso_mktg" id="consenso_mktg_no" value="NO"> NO</label>
+            </div>
+            <div class="signature-line">
+                <div class="signature-box">Firma del richiedente</div>
+                <div class="signature-box">Firma dell'esercente la potestà legale (per minorenni)</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div style="font-size: 11px; color: #666; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Partner Istituzionali</div>
+            <div class="footer-logos">
+                <img src="kinder.png" alt="Kinder Joy of Moving">
+                <img src="veladay.png" alt="Vela Day">
+            </div>
+        </div>
+
+    </form>
+
+    <script>
+        // CONFIGURAZIONE EMAILJS - Sostituisci queste stringhe con i tuoi codici di EmailJS
+        const SERVIZIO_ID = "service_t10nzbn"; 
+        const TEMPLATE_ID = "template_jor913d";
+        const PUBLIC_KEY = "0scfqJJUZv1iiBOSn";
+		const NCTV= "tonino.coppolino@gmail.com";
+
+        // Inizializzazione della libreria
+        emailjs.init({ publicKey: PUBLIC_KEY });
+
+        function inviaTramiteServer() {
+            var form = document.getElementById('moduloTesseramento');
+            var btnInvia = document.getElementById('btnInvia');
+            
+            // Forza la validazione dei campi obbligatori prima di procedere
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Disabilita temporaneamente il bottone per evitare invii multipli
+            btnInvia.disabled = true;
+            btnInvia.innerText = "⌛ Invio in corso...";
+
+            // Estrazione delle scelte radio dei consensi privacy
+            var consensoFiv = document.getElementById('consenso_fiv_si').checked ? "SI" : (document.getElementById('consenso_fiv_no').checked ? "NO" : "Non specificato");
+            var consensoMktg = document.getElementById('consenso_mktg_si').checked ? "SI" : (document.getElementById('consenso_mktg_no').checked ? "NO" : "Non specificato");
+           
+            // Impacchettamento di tutti i dati da passare al template email
+            var parametriTemplate = {
+                Cognome: document.getElementById('cognome').value.trim(),
+                Nome: document.getElementById('nome').value.trim(),
+                Sesso: document.getElementById('sesso').value.trim(),
+                Data_di_Nascita: document.getElementById('data_nascita').value.trim(),
+                Codice_Fiscale: document.getElementById('cf').value.trim(),
+                Comune_di_Nascita: document.getElementById('comune_nascita').value.trim(),
+                Residente_in: document.getElementById('residenza').value.trim(),
+                Indirizzo: document.getElementById('indirizzo').value.trim(),
+                Civico: document.getElementById('civico').value.trim(),
+                CAP: document.getElementById('cap').value.trim(),
+                Tel_Fisso: document.getElementById('tel').value.trim(),
+                Cellulare: document.getElementById('mobile').value.trim(),
+                Email_Utente: document.getElementById('email').value.trim(),
+                Consenso_FIV: consensoFiv,
+                Consenso_Marketing: consensoMktg,
+				EMail_NCTV: NCTV,
+            };
+
+            // Invio sicuro tramite l'infrastruttura di EmailJS
+            emailjs.send(SERVIZIO_ID, TEMPLATE_ID, parametriTemplate)
+                .then(function(response) {
+                    alert("✅ Domanda inviata con successo alla segreteria!");
+                    form.reset(); // Svuota il modulo dopo l'invio riuscito
+                }, function(error) {
+                    alert("❌ Errore durante l'invio della domanda. Riprova più tardi.");
+                    console.error("Dettaglio errore EmailJS:", error);
+                })
+                .finally(function() {
+                    // Ripristina il bottone al termine dell'operazione
+                    btnInvia.disabled = false;
+                    btnInvia.innerText = "✉️ Invia Domanda tramite Email";
+                });
+        }
+    </script>
+
+</body>
+</html>
